@@ -1,7 +1,8 @@
 #pragma once
 
 #include <sstream>
-#include <spdlog/fmt/bundled/format.h>
+// #include <spdlog/fmt/bundled/format.h>
+#include <fmt/format.h>
 #include "utils/PublicTypeHelper.hpp"
 
 #define OB_LOG_FORMATTER(type)                                                                                       \
