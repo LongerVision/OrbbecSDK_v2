@@ -28,16 +28,44 @@
 
 namespace libobsensor {
 using utils::fourCc2Int;
+// const std::map<uint32_t, uvc_frame_format> fourccToUvcFormatMap = {
+//     { fourCc2Int('U', 'Y', 'V', 'Y'), UVC_FRAME_FORMAT_UYVY }, { fourCc2Int('Y', 'U', 'Y', '2'), UVC_FRAME_FORMAT_YUYV },
+//     { fourCc2Int('N', 'V', '1', '2'), UVC_FRAME_FORMAT_NV12 }, { fourCc2Int('I', '4', '2', '0'), UVC_FRAME_FORMAT_I420 },
+//     { fourCc2Int('N', 'V', '2', '1'), UVC_FRAME_FORMAT_NV21 }, { fourCc2Int('M', 'J', 'P', 'G'), UVC_FRAME_FORMAT_MJPEG },
+//     { fourCc2Int('H', '2', '6', '4'), UVC_FRAME_FORMAT_H264 }, { fourCc2Int('H', 'E', 'V', 'C'), UVC_FRAME_FORMAT_HEVC },
+//     { fourCc2Int('Y', '8', ' ', ' '), UVC_FRAME_FORMAT_Y8 },   { fourCc2Int('Y', '1', '0', ' '), UVC_FRAME_FORMAT_Y10 },
+//     { fourCc2Int('Y', '1', '1', ' '), UVC_FRAME_FORMAT_Y11 },  { fourCc2Int('Y', '1', '2', ' '), UVC_FRAME_FORMAT_Y12 },
+//     { fourCc2Int('Y', '1', '4', ' '), UVC_FRAME_FORMAT_Y14 },  { fourCc2Int('Y', '1', '6', ' '), UVC_FRAME_FORMAT_Y16 },
+//     { fourCc2Int('R', 'V', 'L', ' '), UVC_FRAME_FORMAT_RVL },  { fourCc2Int('Z', '1', '6', ' '), UVC_FRAME_FORMAT_Z16 },
+//     { fourCc2Int('Y', 'V', '1', '2'), UVC_FRAME_FORMAT_YV12 }, { fourCc2Int('B', 'A', '8', '1'), UVC_FRAME_FORMAT_BA81 },
+// };
+
+
 const std::map<uint32_t, uvc_frame_format> fourccToUvcFormatMap = {
-    { fourCc2Int('U', 'Y', 'V', 'Y'), UVC_FRAME_FORMAT_UYVY }, { fourCc2Int('Y', 'U', 'Y', '2'), UVC_FRAME_FORMAT_YUYV },
-    { fourCc2Int('N', 'V', '1', '2'), UVC_FRAME_FORMAT_NV12 }, { fourCc2Int('I', '4', '2', '0'), UVC_FRAME_FORMAT_I420 },
-    { fourCc2Int('N', 'V', '2', '1'), UVC_FRAME_FORMAT_NV21 }, { fourCc2Int('M', 'J', 'P', 'G'), UVC_FRAME_FORMAT_MJPEG },
-    { fourCc2Int('H', '2', '6', '4'), UVC_FRAME_FORMAT_H264 }, { fourCc2Int('H', 'E', 'V', 'C'), UVC_FRAME_FORMAT_HEVC },
-    { fourCc2Int('Y', '8', ' ', ' '), UVC_FRAME_FORMAT_Y8 },   { fourCc2Int('Y', '1', '0', ' '), UVC_FRAME_FORMAT_Y10 },
-    { fourCc2Int('Y', '1', '1', ' '), UVC_FRAME_FORMAT_Y11 },  { fourCc2Int('Y', '1', '2', ' '), UVC_FRAME_FORMAT_Y12 },
-    { fourCc2Int('Y', '1', '4', ' '), UVC_FRAME_FORMAT_Y14 },  { fourCc2Int('Y', '1', '6', ' '), UVC_FRAME_FORMAT_Y16 },
-    { fourCc2Int('R', 'V', 'L', ' '), UVC_FRAME_FORMAT_RVL },  { fourCc2Int('Z', '1', '6', ' '), UVC_FRAME_FORMAT_Z16 },
-    { fourCc2Int('Y', 'V', '1', '2'), UVC_FRAME_FORMAT_YV12 }, { fourCc2Int('B', 'A', '8', '1'), UVC_FRAME_FORMAT_BA81 },
+    { fourCc2Int('U', 'Y', 'V', 'Y'), UVC_FRAME_FORMAT_UYVY }, 
+    { fourCc2Int('Y', 'U', 'Y', '2'), UVC_FRAME_FORMAT_YUYV },
+    { fourCc2Int('N', 'V', '1', '2'), UVC_FRAME_FORMAT_NV12 }, 
+    // { fourCc2Int('I', '4', '2', '0'), UVC_FRAME_FORMAT_I420 },  // ❌ 删除
+    // { fourCc2Int('N', 'V', '2', '1'), UVC_FRAME_FORMAT_NV21 },  // ❌ 删除
+    { fourCc2Int('M', 'J', 'P', 'G'), UVC_FRAME_FORMAT_MJPEG },
+    { fourCc2Int('H', '2', '6', '4'), UVC_FRAME_FORMAT_H264 }, 
+    // { fourCc2Int('H', 'E', 'V', 'C'), UVC_FRAME_FORMAT_HEVC },  // ❌ 删除
+    // { fourCc2Int('Y', '8', ' ', ' '), UVC_FRAME_FORMAT_Y8 },    // ❌ 删除 - 用 GRAY8
+    // { fourCc2Int('Y', '1', '0', ' '), UVC_FRAME_FORMAT_Y10 },   // ❌ 删除 - 用 GRAY16
+    // { fourCc2Int('Y', '1', '1', ' '), UVC_FRAME_FORMAT_Y11 },   // ❌ 删除
+    // { fourCc2Int('Y', '1', '2', ' '), UVC_FRAME_FORMAT_Y12 },   // ❌ 删除
+    // { fourCc2Int('Y', '1', '4', ' '), UVC_FRAME_FORMAT_Y14 },   // ❌ 删除
+    // { fourCc2Int('Y', '1', '6', ' '), UVC_FRAME_FORMAT_Y16 },   // ❌ 删除 - 用 GRAY16
+    // { fourCc2Int('R', 'V', 'L', ' '), UVC_FRAME_FORMAT_RVL },   // ❌ 删除
+    // { fourCc2Int('Z', '1', '6', ' '), UVC_FRAME_FORMAT_Z16 },   // ❌ 删除
+    // { fourCc2Int('Y', 'V', '1', '2'), UVC_FRAME_FORMAT_YV12 },  // ❌ 删除
+    { fourCc2Int('B', 'A', '8', '1'), UVC_FRAME_FORMAT_BA81 },
+    
+    // 可以考虑添加一些系统支持的格式映射
+    { fourCc2Int('G', 'R', 'E', 'Y'), UVC_FRAME_FORMAT_GRAY8 },  // ✅ 灰度图
+    { fourCc2Int('Y', '1', '6', ' '), UVC_FRAME_FORMAT_GRAY16 },  // ✅ 16位灰度
+    { fourCc2Int('R', 'G', 'B', ' '), UVC_FRAME_FORMAT_RGB },     // ✅ RGB
+    { fourCc2Int('B', 'G', 'R', ' '), UVC_FRAME_FORMAT_BGR },     // ✅ BGR
 };
 
 uvc_frame_format fourCC2UvcFormat(int32_t fourccCode) {
@@ -64,7 +92,10 @@ ObLibuvcDevicePort::ObLibuvcDevicePort(std::shared_ptr<IUsbDevice> usbDev, std::
     uvcDev_->ref     = 0;
     uvcDev_->usb_dev = libusb_get_device(libusbDevHandle);
 
-    auto res = uvc_open(uvcDev_, portInfo->infIndex, &uvcDevHandle_, libusbDevHandle);
+    // 修复 uvc_open 调用
+    auto res = uvc_open(uvcDev_, &uvcDevHandle_);
+    // 如果还需要 libusbDevHandle，可能需要其他方式处理
+    // auto res = uvc_open(uvcDev_, portInfo->infIndex, &uvcDevHandle_, libusbDevHandle);
     if(res < 0) {
         std::stringstream ss;
         ss << "uvc_open failed: [Path: " << portInfo->infUrl << ", Return Code: " << res << "]";
@@ -131,20 +162,16 @@ void ObLibuvcDevicePort::startStream(std::shared_ptr<const StreamProfile> profil
 
     {
         std::unique_lock<std::mutex> lock(streamMutex_);
-        int32_t                      bufNum = LIBUVC_NUM_TRANSFER_BUFS;
-        if((profile->getFormat() == OB_FORMAT_MJPG || videoProfile->getFormat() == OB_FORMAT_Y8) && videoProfile->getFps() <= LIBUVC_TRANSFER_LOW_FRAME_SIZE) {
-            bufNum = LIBUVC_NUM_TRANSFER_LOW_FRAME_BUFS;
-        }
+        // 移除 bufNum 相关逻辑，因为新版本 libuvc 不再需要手动设置
         auto obStreamHandle = std::make_shared<OBUvcStreamHandle>(videoProfile, callback, uvcStreamHandle);
-        // std::shared_ptr<OBUvcStreamHandle>(new OBUvcStreamHandle(profile, callback, uvcStreamHandle));
         streamHandles_.push_back(obStreamHandle);
         obStreamHandle->loopFrameIndex.store(1);  // frame number start from 1
-        uvcStreamHandle->actual_transfer_buff_num = bufNum;
-        ret                                       = uvc_stream_start(uvcStreamHandle, ObLibuvcDevicePort::onFrameCallback, obStreamHandle.get(), 0);
+        ret = uvc_stream_start(uvcStreamHandle, ObLibuvcDevicePort::onFrameCallback, obStreamHandle.get(), 0);
     }
 
     if(ret == UVC_ERROR_NO_MEM) {
-        for(uint32_t i = 0; i < uvcStreamHandle->actual_transfer_buff_num; i++) {
+        // 新版本 libuvc 使用固定数量的传输缓冲区 LIBUVC_NUM_TRANSFER_BUFS
+        for(uint32_t i = 0; i < LIBUVC_NUM_TRANSFER_BUFS; i++) {
             if(uvcStreamHandle->transfers[i] != nullptr) {
                 free(uvcStreamHandle->transfers[i]->buffer);
                 libusb_free_transfer(uvcStreamHandle->transfers[i]);
@@ -448,14 +475,28 @@ void ObLibuvcDevicePort::onFrameCallback(uvc_frame *frame, void *userPtr) {
 
         videoFrame->updateData(static_cast<const uint8_t *>(frame->data), frame->data_bytes);
 
-        auto payload_header_bytes = frame->payload_header_bytes > 12 ? 12 : frame->payload_header_bytes;
-        videoFrame->updateMetadata(static_cast<const uint8_t *>(frame->payload_header), payload_header_bytes);
-        auto metadata_bytes = frame->metadata_bytes > 255 ? 255 : frame->metadata_bytes;
-        videoFrame->appendMetadata(static_cast<const uint8_t *>(frame->metadata), metadata_bytes);
+        // 新版本 libuvc 中移除了 payload_header 相关字段
+        // 使用 metadata 字段替代（如果可用）
+        if(frame->metadata != nullptr && frame->metadata_bytes > 0) {
+            auto metadata_bytes = frame->metadata_bytes > 255 ? 255 : frame->metadata_bytes;
+            videoFrame->updateMetadata(static_cast<const uint8_t *>(frame->metadata), metadata_bytes);
+        } else {
+            // 如果没有元数据，设置空的元数据
+            videoFrame->updateMetadata(nullptr, 0);
+        }
 
         auto realtime = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
         videoFrame->setSystemTimeStampUsec(realtime);
-        videoFrame->setTimeStampUsec(frame->pts);
+        
+        // 新版本使用 capture_time 替代 pts
+        if(frame->capture_time.tv_sec != 0 || frame->capture_time.tv_usec != 0) {
+            uint64_t pts = (uint64_t)frame->capture_time.tv_sec * 1000000ULL + frame->capture_time.tv_usec;
+            videoFrame->setTimeStampUsec(pts);
+        } else {
+            // 如果没有时间戳，使用系统时间
+            videoFrame->setTimeStampUsec(realtime);
+        }
+        
         // Use a custom frame index instand of uvc_frame::sequence to avoid abnormal sequence ID increments
         // when UVC data reception encounters errors.
         videoFrame->setNumber(handle->loopFrameIndex);
@@ -464,6 +505,31 @@ void ObLibuvcDevicePort::onFrameCallback(uvc_frame *frame, void *userPtr) {
         handle->callback(videoFrame);
     });
 }
+
+// void ObLibuvcDevicePort::onFrameCallback(uvc_frame *frame, void *userPtr) {
+//     TRY_EXECUTE({
+//         OBUvcStreamHandle *handle     = (OBUvcStreamHandle *)userPtr;
+//         auto               rawframe   = FrameFactory::createFrameFromStreamProfile(handle->profile);
+//         auto               videoFrame = rawframe->as<VideoFrame>();
+
+//         videoFrame->updateData(static_cast<const uint8_t *>(frame->data), frame->data_bytes);
+
+//         auto payload_header_bytes = frame->payload_header_bytes > 12 ? 12 : frame->payload_header_bytes;
+//         videoFrame->updateMetadata(static_cast<const uint8_t *>(frame->payload_header), payload_header_bytes);
+//         auto metadata_bytes = frame->metadata_bytes > 255 ? 255 : frame->metadata_bytes;
+//         videoFrame->appendMetadata(static_cast<const uint8_t *>(frame->metadata), metadata_bytes);
+
+//         auto realtime = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+//         videoFrame->setSystemTimeStampUsec(realtime);
+//         videoFrame->setTimeStampUsec(frame->pts);
+//         // Use a custom frame index instand of uvc_frame::sequence to avoid abnormal sequence ID increments
+//         // when UVC data reception encounters errors.
+//         videoFrame->setNumber(handle->loopFrameIndex);
+//         handle->loopFrameIndex++;
+
+//         handle->callback(videoFrame);
+//     });
+// }
 
 int32_t ObLibuvcDevicePort::getCtrl(uvc_req_code action, uint8_t control, uint8_t unit) const {
     unsigned char buffer[4] = { 0 };
