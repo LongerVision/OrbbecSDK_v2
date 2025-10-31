@@ -10,7 +10,7 @@
 namespace libobsensor {
 FrameProcessorFactory::FrameProcessorFactory(IDevice *owner) : DeviceComponentBase(owner) {
     std::string moduleLoadPath = EnvConfig::getExtensionsDirectory() + "/frameprocessor/";
-    dylib_                     = std::make_shared<dylib>(moduleLoadPath.c_str(), "ob_frame_processor");
+    dylib_                     = std::make_shared<dylib::library>((moduleLoadPath + "ob_frame_processor").c_str(), dylib::decorations::os_default());
 
     auto dylib = dylib_;
     context_   = std::shared_ptr<FrameProcessorContext>(new FrameProcessorContext(), [dylib](FrameProcessorContext *context) {

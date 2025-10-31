@@ -97,7 +97,7 @@ void Context::logExtensionsCommitHashes() {
     for(const auto &libInfo: extensionsMap) {
         try {
             std::string              moduleLoadPath     = EnvConfig::getExtensionsDirectory() + libInfo.second.first;
-            auto                     dylib_             = std::make_shared<dylib>(moduleLoadPath.c_str(), libInfo.second.second.c_str());
+            auto dylib_ = std::make_shared<dylib::library>((moduleLoadPath + libInfo.second.second).c_str(), dylib::decorations::os_default());
             pfunc_ob_get_commit_hash ob_get_commit_hash = dylib_->get_function<const char *()>("ob_get_commit_hash");
 
             if(dylib_ && ob_get_commit_hash) {

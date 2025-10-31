@@ -33,7 +33,7 @@ public:
     std::shared_ptr<FrameProcessor> createFrameProcessor(OBSensorType sensorType);
 
 private:
-    std::shared_ptr<dylib> dylib_;
+    std::shared_ptr<dylib::library> dylib_;
 
     std::shared_ptr<FrameProcessorContext> context_;
 
