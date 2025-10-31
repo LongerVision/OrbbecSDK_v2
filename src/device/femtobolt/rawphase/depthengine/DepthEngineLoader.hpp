@@ -31,7 +31,7 @@ public:
     }
 
 private:
-    std::shared_ptr<dylib>                     dylib_;
+    std::shared_ptr<dylib::library>                     dylib_;
     std::shared_ptr<deloader_global_context_t> context_;
 };
 
