@@ -1,27 +1,43 @@
 # Copyright (c) Orbbec Inc. All Rights Reserved.
 # Licensed under the MIT License.
 
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.10)
 
-# add the shared library with version number
-add_library(shared STATIC)
+project(shared)
 
-# add the shared library sources
-file(GLOB_RECURSE SOURCE_FILES "*.cpp" EXCLUDE unittest)
-file(GLOB_RECURSE HEADERS_FILES "*.hpp" EXCLUDE unittest)
-target_sources(shared PRIVATE ${SOURCE_FILES} ${HEADERS_FILES})
+if(OB_USE_SYSTEM_LIBS)
+    message(STATUS "shared: Using system libraries")
+else()
+    message(STATUS "shared: Building third-party libraries")
+    
+    if(OB_BUILD_3RDPARTY_SPDLOG AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../../../3rdparty/spdlog/CMakeLists.txt)
+        add_subdirectory(../../../3rdparty/spdlog)
+    endif()
+    
+    if(OB_BUILD_3RDPARTY_TINYXML2 AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/../../../3rdparty/tinyxml2/CMakeLists.txt)
+        add_subdirectory(../../../3rdparty/tinyxml2)
+    endif()
+endif()
 
-add_subdirectory(${OB_3RDPARTY_DIR}/spdlog spdlog)
-target_link_libraries(shared PUBLIC spdlog::spdlog)
-target_include_directories(shared PUBLIC ${OB_PUBLIC_HEADERS_DIR} ${CMAKE_CURRENT_LIST_DIR})
+# 创建 shared 库（即使没有源文件）
+add_library(shared INTERFACE)
 
-add_subdirectory(${OB_3RDPARTY_DIR}/tinyxml2 tinyxml2)
-target_link_libraries(shared PUBLIC tinyxml2::tinyxml2)
+# 添加系统库依赖
+if(OB_USE_SYSTEM_LIBS)
+    if(OB_SPDLOG_LIB)
+        target_link_libraries(shared INTERFACE ${OB_SPDLOG_LIB})
+    endif()
+    if(OB_TINYXML2_LIB)
+        target_link_libraries(shared INTERFACE ${OB_TINYXML2_LIB})
+    endif()
+    if(OB_FMT_LIB)
+        target_link_libraries(shared INTERFACE ${OB_FMT_LIB})
+    endif()
+endif()
 
-add_subdirectory(environment)
-target_link_libraries(shared PUBLIC ob::env_config_rc ob::core)
+target_include_directories(shared INTERFACE ${OB_PUBLIC_HEADERS_DIR} ${CMAKE_CURRENT_LIST_DIR})
 
+# 创建别名
 add_library(ob::shared ALIAS shared)
-ob_source_group(ob::shared)
-set_target_properties(shared PROPERTIES FOLDER "modules")
 
+message(STATUS "shared: Created interface library with system dependencies")

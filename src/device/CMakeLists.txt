@@ -1,7 +1,7 @@
 # Copyright (c) Orbbec Inc. All Rights Reserved.
 # Licensed under the MIT License.
 
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.10)
 
 set(OB_TARGET_DEVICE device)
 add_library(${OB_TARGET_DEVICE} STATIC)
@@ -29,11 +29,19 @@ add_subdirectory(femtomega) # FemtoMega
 add_subdirectory(openni) # OpenNI device
 add_subdirectory(bootloader) # Bootloader device
 
-# dependecies:
-add_subdirectory(${OB_3RDPARTY_DIR}/jsoncpp jsoncpp)
-target_link_libraries(${OB_TARGET_DEVICE} PUBLIC jsoncpp::jsoncpp)
+# dependencies:
+if(NOT OB_USE_SYSTEM_LIBS)
+    if(OB_BUILD_3RDPARTY_JSONCPP AND EXISTS ${OB_3RDPARTY_DIR}/jsoncpp/CMakeLists.txt)
+        add_subdirectory(${OB_3RDPARTY_DIR}/jsoncpp jsoncpp)
+        target_link_libraries(${OB_TARGET_DEVICE} PUBLIC jsoncpp::jsoncpp)
+    endif()
+else()
+    # 使用系统库
+    if(OB_JSONCPP_LIB)
+        target_link_libraries(${OB_TARGET_DEVICE} PUBLIC ${OB_JSONCPP_LIB})
+    endif()
+endif()
 
 add_library(ob::device ALIAS ${OB_TARGET_DEVICE})
 ob_source_group(ob::device)
 set_target_properties(${OB_TARGET_DEVICE} PROPERTIES FOLDER "modules")
-
