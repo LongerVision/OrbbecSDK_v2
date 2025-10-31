@@ -99,7 +99,16 @@ void RTSPStreamPort::stopStream() {
 
 void RTSPStreamPort::createClient(std::shared_ptr<const StreamProfile> profile, MutableFrameCallback callback) {
     destroy_              = 0;
-    eventLoopThread_      = std::thread([&]() { live555Env_->taskScheduler().doEventLoop(&destroy_); });
+    // 在类定义中添加成员变量
+    std::atomic<char> destroyFlag_{0};
+
+    // 修改线程启动代码
+    eventLoopThread_ = std::thread([&]() { 
+        live555Env_->taskScheduler().doEventLoop(&destroyFlag_); 
+    });
+
+
+    // eventLoopThread_      = std::thread([&]() { live555Env_->taskScheduler().doEventLoop(&destroy_); });
     currentStreamProfile_ = profile;
     auto vsp              = currentStreamProfile_->as<VideoStreamProfile>();
 
