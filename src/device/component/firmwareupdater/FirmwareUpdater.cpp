@@ -12,7 +12,7 @@ FirmwareUpdater::FirmwareUpdater(IDevice *owner) : DeviceComponentBase(owner) {
     std::string moduleLoadPath = EnvConfig::getExtensionsDirectory() + "/firmwareupdater/";
     try {
         ctx_         = std::make_shared<FirmwareUpdateContext>();
-        ctx_->dylib_ = std::make_shared<dylib>(moduleLoadPath.c_str(), "firmwareupdater");
+        ctx_->dylib_ = std::make_shared<dylib::library>((moduleLoadPath + "firmwareupdater").c_str(), dylib::decorations::os_default());
         if(ctx_ && ctx_->dylib_) {
             ctx_->update_firmware_ext = ctx_->dylib_->get_function<void(ob_device *, const char *, ob_device_fw_update_callback, bool, void *, ob_error **)>(
                 "ob_device_update_firmware_ext");
